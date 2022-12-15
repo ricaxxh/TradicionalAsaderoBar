@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <!-- Header de la página, nos permitirá incluir propiedades como el CSS y el título de la página así como el favicon. -->
+  <title>Tradicional Asadero Bar</title>
+  <style type="text/css">
+    /* Estilos para el header */
+    body {
+     margin: 0;
+     font-family: Arial;
+     background-color: #f2f2f2;
+    }
+    .menu {
+     margin-left: 20px;
+     margin-right: 20px;
+     background-color: #fff;
+     border-radius: 10px;
+     padding: 20px;
+     border: 2px solid #ccc;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .menu h1 {
+     color: #444;
+     margin-bottom: 20px;
+    }
+    /* Estilos para la tabla de productos */
+    .menu table {
+     width: 100%;
+     border-collapse: collapse;
+    }
+    .menu table td {
+     padding: 8px;
+     border: 1px solid #ddd;
+     text-align: center;
+    }
+    .menu table td:first-child {
+     text-align: left;
+    }
+    .menu table tr:nth-child(even) {
+     background-color: #f2f2f2;
+    }
+    .menu table th {
+     padding: 10px;
+     background-color: #444;
+     color: #fff;
+    }
+    /* Estilos para el carrito */
+    .menu .cart {
+     float: right;
+     margin-top: 20px;
+    }
+    .menu .cart table {
+     width: 100%;
+    }
+    .menu .cart table td {
+     text-align: right;
+    }
+    .menu input[type="button"]{
+        padding: 10px;
+        background-color: #444;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+    }
+    .menu .cart input[type="button"]{
+        background-color: #ccc;
+        color: #000;
+    }
+   </style>
+   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+ </head>
+ <body>
+  <div class="menu">
+   <h1>Menú</h1>
+    <!-- Tabla de productos -->
+   <table>
+    <tr>
+     <th>Nombre</th>
+     <th>Imagen</th>
+     <th>Precio</th>
+     <th>Cantidad</th>
+     <th>Agregar</th>
+    </tr>
+    <tr>
+      <!-- Cada producto tendrá un nombre, una imagen, un precio y un botón para agregarlo al carrito -->
+     <td>Orden de Sirloin</td>
+     <td><img src="images/sirloinord.jpg" width="100" height="80"/></td>
+     <td>$165.00</td>
+     <td><input type="text" id="sirloin_ord_qty" size="3" value="0"/></td>
+     <!-- El botón tendrá un evento onclick que llamará a la función agregar() -->
+     <td><input type="button" onclick="agregar('sirloin_ord')" value="Agregar"/></td>
+    </tr>
+    <tr>
+     <td>Tiramisu</td>
+     <td><img src="images/tiramisu.jpg" width="100" height="80"/></td>
+     <td>$70.00</td>
+     <td><input type="text" id="tiramisu_qty" size="3" value="0"/></td>
+     <!-- El botón tendrá un evento onclick que llamará a la función agregar() -->
+     <td><input type="button" onclick="agregar('tiramisu')" value="Agregar"/></td>
+    </tr>
+    <tr>
+     <td>Papas a la Francesa</td>
+     <td><img src="images/papasfr.jpg" width="100" height="80"/></td>
+     <td>$90.00</td>
+     <td><input type="text" id="papasfr_qty" size="3" value="0"/></td>
+     <!-- El botón tendrá un evento onclick que llamará a la función agregar() -->
+     <td><input type="button" onclick="agregar('papasfr')" value="Agregar"/></td>
+    </tr>
+   </table>
+   <div class="cart">
+    <h3>Carrito de compra</h3>
+    <!-- Tabla del carrito -->
+    <table>
+     <tr>
+      <th>Nombre</th>
+      <th>Cantidad</th>
+      <th>Precio</th>
+      <th>Total</th>
+      <th>Editar</th>
+      <th>Eliminar</th>
+     </tr>
+    </table>
+    <p>
+     <strong>Total a pagar:</strong> $<span id="total">0.00</span>
+    </p>
+    <input type="button" value="Pagar en efectivo" onclick="imprimirFactura()" />
+   </div>
+  </div>
+  <!-- El script tendrá una variable carrito que contendrá los productos que se agreguen al carrito -->
+  <script type="text/javascript">
+   var carrito = [];
+   // Función para agregar un producto al carrito
+   function agregar(nombre) {
+    // Se obtiene la cantidad del producto
+    var cantidad = document.getElementById(nombre + '_qty').value;
+    // Se obtiene el precio del producto
+    var precio;
+    // Se crea un objeto con el nombre, la cantidad y el precio del producto
+    switch (nombre) {
+     case 'sirloin_ord':
+      // Se obtiene el precio del producto
+      precio = 165.00;
+      break;
+     case 'tiramisu':
+      // Se obtiene el precio del producto
+      precio = 70.00;
+      break;
+     case 'papasfr':
+      // Se obtiene el precio del producto
+      precio = 90.00;
+      break;
+    }
+    // Se agrega el producto al carrito
+    if (cantidad > 0) {
+      // Se crea un objeto con el nombre, la cantidad y el precio del producto
+     carrito.push({
+      nombre: nombre,
+      cantidad: cantidad,
+      precio: precio
+     });
+     // Se actualiza el carrito
+     actualizarCarrito();
+    }
+   }
+   // Función para actualizar el carrito
+   function actualizarCarrito() {
+    // Se obtiene la tabla del carrito
+    var tabla = document.querySelector('.cart table');
+    tabla.innerHTML = '';
+    // Se obtiene el total
+    var total = 0;
+    // Se recorre el carrito
+    for (var i = 0; i < carrito.length; i++) {
+      // Se obtienen los datos del producto
+     var nombre = carrito[i].nombre;
+     var cantidad = carrito[i].cantidad;
+     var precio = carrito[i].precio;
+     var subtotal = cantidad * precio;
+     // Se actualiza el total
+     total += subtotal;
+     // Se agrega el producto al carrito
+     tabla.innerHTML += '<tr>' +
+      '<td>' + nombre + '</td>' +
+      '<td>' + cantidad + '</td>' +
+      '<td>$' + precio.toFixed(2) + '</td>' +
+      '<td>$' + subtotal.toFixed(2) + '</td>' +
+      '<td><input type="button" value="Editar" onclick="editar(' + i + ')" /></td>' +
+      '<td><input type="button" value="Eliminar" onclick="eliminar(' + i + ')" /></td>' +
+      '</tr>';
+    }
+    // Se agrega el total al carrito
+    tabla.innerHTML += '<tr>' +
+     '<td colspan="3"><strong>Total</strong></td>' +
+     '<td>$' + total.toFixed(2) + '</td>' +
+     '<td colspan="2"></td>' +
+     '</tr>';
+    document.getElementById('total').innerHTML = total.toFixed(2);
+   }
+   // Función para editar un producto del carrito
+   function editar(indice) {
+    // Se obtiene la cantidad del producto
+    var cantidad = prompt('Cantidad:', carrito[indice].cantidad);
+    if (cantidad != null) {
+     carrito[indice].cantidad = cantidad;
+     actualizarCarrito();
+    }
+   }
+   // Función para eliminar un producto del carrito
+   function eliminar(indice) {
+    // Se elimina el producto del carrito
+    carrito.splice(indice, 1);
+    actualizarCarrito();
+   }
+   // Función para imprimir la factura
+   function imprimirFactura() {
+    // Se obtiene la tabla del carrito
+    var factura = '<h1>Factura de Tradicional Asadero Bar</h1>';
+    // Se agrega el logo
+    factura += '<img width="40px" src="images/logo.png" alt="Logo Tradicional Asadero Bar" />';
+    // Se agrega la fecha
+    factura += '<p>Fecha: ' + new Date() + '</p>';
+    // Se agrega la tabla
+    factura += '<table>';
+    // Se agrega la cabecera de la tabla
+    factura += '<tr><th>Nombre</th><th>Cantidad</th><th>Precio</th><th>Total</th></tr>';
+    // Se recorre el carrito
+    for (var i = 0; i < carrito.length; i++) {
+      // Se obtienen los datos del producto
+     var nombre = carrito[i].nombre;
+     // Se obtiene el nombre del producto
+     var cantidad = carrito[i].cantidad;
+     // Se obtiene la cantidad del producto
+     var precio = carrito[i].precio;
+     // Se obtiene el precio del producto
+     var subtotal = cantidad * precio;
+     factura += '<tr>' +
+      '<td>' + nombre + '</td>' +
+      '<td>' + cantidad + '</td>' +
+      '<td>$' + precio.toFixed(2) + '</td>' +
+      '<td>$' + subtotal.toFixed(2) + '</td>' +
+      '</tr>';
+    }
+    // Se agrega el total
+    factura += '</table>';
+    factura += '<p><strong>Total a pagar:</strong> $' + document.getElementById('total').innerHTML + '</p>';
+    factura += '<input type="button" value="Imprimir" onclick="window.print()" />';
+    // Se imprime la factura
+    document.body.innerHTML = factura;
+   }
+  </script>
+ </body>
+</html>
